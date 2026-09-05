@@ -12,7 +12,7 @@ const useTransactions = (userId: string) => {
   const fetchTransactions = useCallback(async () => {
     try {
       const { data } = await api.get(`transactions/${userId}`);
-      console.log(data);
+      // console.log(data);
       setTransactions(data.data);
     } catch (error) {
       console.error("Error while fetching the transactions", error);
@@ -28,7 +28,7 @@ const useTransactions = (userId: string) => {
   const getSummary = useCallback(async () => {
     try {
       const { data } = await api.get(`/transactions/summary/${userId}`);
-      console.log(data);
+      // console.log(data);
       setSummary(data.data);
     } catch (error) {
       console.error("Error while fetching  the transaction summary", error);
@@ -49,15 +49,22 @@ const useTransactions = (userId: string) => {
   const addTransactions = async (transactionData) => {
     try {
       const { data } = await api.post("/transactions", { ...transactionData });
-      setTransactions((prev) => [...prev, data.data[0]]);
+
+      if (data.success) {
+        // console.log(data.data[0]);
+
+        setTransactions((prev) => [...prev, data.data[0]]);
+        return data.success;
+      }
     } catch (error) {
-      console.error("Error while fetching  the transaction summary", error);
+      console.error("Error while adding transaction", error);
+      return false;
     }
   };
   useEffect(() => {
     loadData();
   }, [userId]);
-  console.log(summary);
+  // console.log(summary);
   return {
     fetchTransactions,
     deleteTransaction,
@@ -66,6 +73,7 @@ const useTransactions = (userId: string) => {
     transactions,
     isLoading,
     summary,
+    loadData,
   };
 };
 export default useTransactions;

@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
     res.send("Expense Tracker API is running... 🚀");
 });
+
 app.use("/api/transactions", TransactionRouter)
 const PORT = process.env.PORT || 5000;
 initDB().then(() => {
